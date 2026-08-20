@@ -129,18 +129,15 @@ jobs:
         env:
           NEXT_PUBLIC_SITE_URL: https://${{ vars.SITE_DOMAIN }}${{ vars.PAGES_BASE_PATH }}
           NEXT_PUBLIC_FORM_API_URL: ${{ vars.FORM_API_URL }}
-          # Tenant slug — baked into the static build so client-side form
-          # components address the multi-tenant submission endpoint:
-          #   POST <FORM_API_URL>/api/forms/<TENANT_SLUG>/<formId>
-          # Without it, forms fall back to a same-origin /api/form/* path that
-          # does not exist on a static GitHub Pages export (forms 404).
           NEXT_PUBLIC_TENANT_SLUG: ${{ vars.TENANT_SLUG }}
           # SHORT-path proxy hosts (api./mail.mazcode.pl) strip the /api/forms
           # convention via next.config rewrites; '1' makes getFormSubmitUrl emit
           # <base>/<tenant>/<form>. Empty for full-path hosts (admin.mazcode.pl).
           NEXT_PUBLIC_FORM_API_SHORT: ${{ vars.FORM_API_SHORT }}
-          # Analytics (GA4/Hotjar/PostHog) comes ONLY from config/site.json — never env.
+          # Analytics (GA4/Hotjar/PostHog) comes ONLY from config/site.json analytics block, never env.
           CONTENT_ENCRYPTION_KEY: ${{ secrets.CONTENT_ENCRYPTION_KEY }}
+          # Dummy Auth0 vars — required for top-level Auth0Client instantiation
+          # during static build, but admin/API routes are not emitted in export.
           AUTH0_DOMAIN: dummy.auth0.com
           AUTH0_CLIENT_ID: dummy-client-id
           AUTH0_CLIENT_SECRET: dummy-client-secret-min-32-chars-long
